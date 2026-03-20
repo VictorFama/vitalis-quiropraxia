@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vitalis — Quiropráxia | Lic. Martín Fama</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --forest:   #1A3A2E;
+      --forest2:  #122B22;
+      --green:    #2D7D6F;
+      --green-lt: #4A9B8A;
+      --lime:     #8BC34A;
+      --sage:     #7A9E8E;
+      --sage-lt:  #EBF4EF;
+      --cream:    #FAF8F4;
+      --sand:     #F0EAE0;
+      --ivory:    #FDFBF8;
+      --text:     #1E2A24;
+      --muted:    #6B8278;
+      --rule:     rgba(45,125,111,0.12);
+      --gold:     #C9A84C;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      background: var(--ivory);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+      padding: 13px 28px; border: none; cursor: pointer;
+      transition: all 0.3s; white-space: nowrap; text-decoration: none;
+    }
+    .btn--primary {
+      background: var(--green); color: white; border-radius: 50px;
+    }
+    .btn--primary:hover {
+      background: var(--forest); transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(45,125,111,0.35);
+    }
+    .btn--ghost {
+      background: transparent; color: white; border-radius: 50px;
+      border: 1.5px solid rgba(255,255,255,0.55);
+    }
+    .btn--ghost:hover { background: rgba(255,255,255,0.1); }
+    .btn--nav {
+      background: var(--green); color: white; border-radius: 50px;
+      padding: 9px 22px; font-size: 0.85rem;
+    }
+    .btn--nav:hover { background: var(--forest); }
+    .btn--full { width: 100%; justify-content: center; }
+    .btn--lg { padding: 16px 40px; font-size: 1rem; border-radius: 50px; }
+    .btn--outline-dark {
+      background: transparent; color: var(--text); border-radius: 50px;
+      border: 1.5px solid rgba(30,42,36,0.25);
+    }
+    .btn--outline-dark:hover { border-color: var(--green); color: var(--green); }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 20px 0;
+      transition: background 0.35s, box-shadow 0.35s, padding 0.35s;
+    }
+    nav.scrolled {
+      background: rgba(250,248,244,0.97);
+      box-shadow: 0 2px 20px rgba(26,58,46,0.08);
+      backdrop-filter: blur(16px);
+      padding: 14px 0;
+    }
+    .nav__inner {
+      max-width: 1160px; margin: 0 auto; padding: 0 28px;
+      display: flex; align-items: center; gap: 36px;
+    }
+    .nav__logo {
+      display: flex; align-items: center; gap: 10px;
+      margin-right: auto; text-decoration: none;
+    }
+    .nav__logo img { height: 36px; transition: filter 0.35s; }
+    nav:not(.scrolled) .nav__logo img { filter: brightness(0) invert(1); }
+    .nav__logo-text {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.1rem;
+      font-weight: 600; letter-spacing: 0.5px;
+      color: white; transition: color 0.35s;
+    }
+    nav.scrolled .nav__logo-text { color: var(--text); }
+    .nav__links { display: flex; gap: 30px; }
+    .nav__links a {
+      font-size: 0.875rem; font-weight: 400;
+      color: rgba(255,255,255,0.88); transition: color 0.3s;
+    }
+    nav.scrolled .nav__links a { color: var(--muted); }
+    .nav__links a:hover { color: white; }
+    nav.scrolled .nav__links a:hover { color: var(--green); }
+    .nav__toggle {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .nav__toggle span {
+      display: block; width: 24px; height: 2px;
+      background: white; border-radius: 2px; transition: all 0.3s;
+    }
+    nav.scrolled .nav__toggle span { background: var(--text); }
+
+    /* MOBILE MENU */
+    .mobile-menu {
+      position: fixed; inset: 0; background: var(--ivory); z-index: 99;
+      display: flex; align-items: center; justify-content: center;
+      transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    .mobile-menu.open { transform: translateX(0); }
+    .mobile-menu ul { display: flex; flex-direction: column; align-items: center; gap: 28px; text-align: center; }
+    .mobile-menu ul a { font-size: 1.5rem; font-weight: 300; color: var(--text); font-family: 'Cormorant Garamond', serif; }
+    .mobile-link:hover { color: var(--green); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; min-height: 100vh;
+      background: var(--forest2);
+      display: grid; grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+    }
+    .hero__bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 80% at 80% 50%, rgba(45,125,111,0.3) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 60% at 10% 80%, rgba(26,58,46,0.8) 0%, transparent 50%),
+        linear-gradient(135deg, #0D1F18 0%, #1A3A2E 50%, #2D5040 100%);
+    }
+    .hero__bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(139,195,74,0.04) 1px, transparent 1px);
+      background-size: 52px 52px;
+    }
+    .hero__left {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 140px 64px 80px 72px;
+    }
+    .hero__eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--lime);
+      margin-bottom: 32px;
+    }
+    .hero__eyebrow::before {
+      content: ''; display: block; width: 28px; height: 1px; background: var(--lime);
+    }
+    .hero__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5vw, 5rem); font-weight: 300;
+      color: white; line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 24px;
+    }
+    .hero__title em { font-style: italic; color: var(--lime); }
+    .hero__subtitle {
+      font-size: clamp(0.95rem, 1.5vw, 1.1rem); font-weight: 300;
+      color: rgba(255,255,255,0.65); max-width: 480px;
+      line-height: 1.8; margin-bottom: 48px;
+    }
+    .hero__actions { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero__right {
+      position: relative; z-index: 2;
+      display: flex; align-items: center; justify-content: center;
+      padding: 100px 60px 80px;
+    }
+    .hero__img-wrap {
+      position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    .hero__img-glow {
+      position: absolute; width: 520px; height: 520px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(139,195,74,0.15), transparent 70%);
+      animation: glowPulse 4s ease-in-out infinite;
+    }
+    @keyframes glowPulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.1);opacity:0.7} }
+    .hero__img-wrap img {
+      max-width: 460px; width: 100%; position: relative; z-index: 2;
+      filter: drop-shadow(0 20px 60px rgba(0,0,0,0.4));
+      animation: floatHero 5s ease-in-out infinite;
+    }
+    @keyframes floatHero { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+    .hero__scroll {
+      position: absolute; bottom: 36px; left: 72px; z-index: 2;
+      display: flex; align-items: center; gap: 14px;
+      color: rgba(255,255,255,0.35); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+    }
+    .hero__scroll-line {
+      width: 48px; height: 1px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.35), transparent);
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      background: var(--forest); padding: 32px 0;
+      border-bottom: 1px solid rgba(139,195,74,0.15);
+    }
+    .stats-bar__inner {
+      max-width: 1160px; margin: 0 auto; padding: 0 28px;
+      display: flex; justify-content: center; gap: 64px;
+    }
+    .stat-b { text-align: center; }
+    .stat-b strong {
+      font-family: 'Cormorant Garamond', serif; font-size: 2.6rem;
+      font-weight: 300; color: var(--lime); display: block; line-height: 1;
+    }
+    .stat-b span {
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.4); margin-top: 6px; display: block;
+    }
+
+    /* ── SECTIONS ── */
+    .section { padding: 100px 0; }
+    .section--alt { background: var(--cream); }
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 28px; }
+    .section__header { text-align: center; margin-bottom: 64px; }
+    .section__tag {
+      display: inline-block; font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--green);
+      margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 12px;
+    }
+    .section__tag::before, .section__tag::after {
+      content: ''; display: block; width: 24px; height: 1px; background: var(--green); opacity: 0.5;
+    }
+    .section__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300;
+      color: var(--text); letter-spacing: -0.02em; line-height: 1.15;
+    }
+    .section__subtitle {
+      margin-top: 16px; font-size: 1rem; font-weight: 300;
+      color: var(--muted); max-width: 520px; margin-left: auto; margin-right: auto;
+      line-height: 1.8;
+    }
+
+    /* ── QUÉ ES ── */
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center;
+    }
+    .about-text p { color: var(--muted); margin-bottom: 18px; font-size: 1rem; line-height: 1.85; font-weight: 300; }
+    .about-lead { font-size: 1.15rem !important; color: var(--text) !important; font-weight: 400 !important; }
+    .about-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+      border-radius: 20px; overflow: hidden;
+    }
+    .stat {
+      background: var(--sage-lt); padding: 40px 28px;
+      display: flex; flex-direction: column; gap: 6px; transition: background 0.3s;
+    }
+    .stat:hover { background: #d6ebdf; }
+    .stat__number {
+      font-family: 'Cormorant Garamond', serif; font-size: 2.4rem;
+      font-weight: 300; color: var(--green); line-height: 1;
+    }
+    .stat__label { font-size: 0.82rem; color: var(--muted); font-weight: 400; }
+
+    /* ── BENEFICIOS CARDS ── */
+    .cards-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    .card {
+      background: var(--ivory); border-radius: 20px; padding: 36px 28px;
+      border: 1px solid rgba(45,125,111,0.1);
+      transition: all 0.35s;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 48px rgba(26,58,46,0.1);
+      border-color: rgba(45,125,111,0.25);
+    }
+    .card__icon {
+      width: 52px; height: 52px; background: var(--sage-lt);
+      border-radius: 14px; display: flex; align-items: center; justify-content: center;
+      margin-bottom: 22px; color: var(--green);
+    }
+    .card__icon svg { width: 26px; height: 26px; }
+    .card__title {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600;
+      color: var(--text); margin-bottom: 12px; line-height: 1.3;
+    }
+    .card__text { font-size: 0.88rem; color: var(--muted); line-height: 1.78; font-weight: 300; }
+
+    /* ── PROFESIONAL ── */
+    .pro-grid { display: grid; grid-template-columns: 300px 1fr; gap: 72px; align-items: start; }
+    .pro-avatar { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .pro-avatar__circle {
+      width: 220px; height: 220px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--sage-lt), #c8e6d4);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--green); border: 2px solid rgba(45,125,111,0.15);
+    }
+    .pro-avatar__circle svg { width: 80px; height: 80px; }
+    .pro-badge {
+      background: var(--sage-lt); border: 1px solid rgba(45,125,111,0.2);
+      color: var(--green); font-size: 0.78rem; font-weight: 500;
+      padding: 6px 18px; border-radius: 50px; letter-spacing: 0.04em;
+    }
+    .pro-content p { color: var(--muted); margin-bottom: 18px; font-size: 1rem; line-height: 1.85; font-weight: 300; }
+    .pro-lead { font-size: 1.15rem !important; color: var(--text) !important; font-weight: 400 !important; line-height: 1.65 !important; }
+    .pro-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+    .tag {
+      background: var(--sage-lt); border: 1px solid rgba(45,125,111,0.2);
+      color: var(--green); font-size: 0.78rem; font-weight: 400;
+      padding: 6px 16px; border-radius: 50px;
+    }
+
+    /* ── CONTACT ── */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+    .contact-info { display: flex; flex-direction: column; gap: 28px; }
+    .contact-item { display: flex; align-items: flex-start; gap: 16px; }
+    .contact-item__icon {
+      width: 44px; height: 44px; min-width: 44px;
+      background: var(--sage-lt); border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; color: var(--green);
+    }
+    .contact-item__icon svg { width: 20px; height: 20px; }
+    .contact-item__label {
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+    }
+    .contact-item__value { font-size: 0.95rem; color: var(--text); font-weight: 400; }
+    .contact-item__value--link { color: var(--green); transition: color 0.3s; }
+    .contact-item__value--link:hover { color: var(--forest); }
+    .map-wrapper {
+      border-radius: 20px; overflow: hidden; height: 380px;
+      box-shadow: 0 8px 32px rgba(26,58,46,0.1);
+      border: 1px solid rgba(45,125,111,0.1);
+    }
+
+    /* ── QUOTE BAND ── */
+    .quote-band {
+      background: var(--forest); padding: 72px 0; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .quote-band::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(139,195,74,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .quote-band blockquote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.5rem, 3vw, 2.4rem); font-style: italic; font-weight: 300;
+      color: rgba(255,255,255,0.88); max-width: 700px;
+      margin: 0 auto 20px; line-height: 1.5; position: relative;
+    }
+    .quote-band cite {
+      font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--lime); font-style: normal; display: flex;
+      align-items: center; justify-content: center; gap: 14px; position: relative;
+    }
+    .quote-band cite::before, .quote-band cite::after {
+      content: ''; display: block; width: 28px; height: 1px; background: var(--lime);
+    }
+
+    /* ── CTA ── */
+    .cta {
+      padding: 100px 24px;
+      background: linear-gradient(135deg, var(--forest) 0%, var(--green) 100%);
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .cta::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 52px 52px;
+    }
+    .cta__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300;
+      color: white; letter-spacing: -0.02em; margin-bottom: 16px; position: relative;
+    }
+    .cta__subtitle {
+      font-size: 1rem; font-weight: 300; color: rgba(255,255,255,0.72);
+      margin-bottom: 40px; max-width: 480px;
+      margin-left: auto; margin-right: auto; position: relative;
+    }
+    .cta .btn--primary {
+      background: white; color: var(--forest); border-radius: 50px; position: relative;
+    }
+    .cta .btn--primary:hover {
+      background: var(--cream); box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+
+    /* ── FOOTER ── */
+    .footer { background: var(--forest2); padding: 52px 0 24px; }
+    .footer__inner {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 40px; padding-bottom: 32px; flex-wrap: wrap;
+      border-bottom: 1px solid rgba(255,255,255,0.07); margin-bottom: 24px;
+    }
+    .footer__logo-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .footer__logo-wrap img { height: 32px; filter: brightness(0) invert(1); opacity: 0.55; }
+    .footer__logo {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.3rem;
+      font-weight: 400; color: rgba(255,255,255,0.7);
+    }
+    .footer__tagline { font-size: 0.82rem; color: rgba(255,255,255,0.35); font-weight: 300; margin-top: 4px; }
+    .footer__info { text-align: right; }
+    .footer__info p { font-size: 0.82rem; color: rgba(255,255,255,0.4); margin-bottom: 4px; font-weight: 300; }
+    .footer__copy { font-size: 0.75rem; color: rgba(255,255,255,0.2); text-align: center; }
+
+    /* ── WHATSAPP FLOAT ── */
+    .whatsapp-float {
+      position: fixed; bottom: 28px; right: 28px; z-index: 200;
+      width: 58px; height: 58px; border-radius: 50%;
+      background: #25d366; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 24px rgba(37,211,102,0.4); color: white;
+      transition: all 0.3s;
+    }
+    .whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 10px 32px rgba(37,211,102,0.55); }
+    .whatsapp-float svg { width: 28px; height: 28px; }
+    .wa-tip {
+      position: absolute; right: 68px; background: var(--forest2);
+      color: white; font-size: 13px; padding: 8px 14px; border-radius: 8px;
+      white-space: nowrap; opacity: 0; transform: translateX(8px);
+      transition: opacity 0.3s, transform 0.3s; pointer-events: none;
+    }
+    .whatsapp-float:hover .wa-tip { opacity: 1; transform: translateX(0); }
+
+    /* ── ANIMATIONS ── */
+    .fade-in {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .card:nth-child(2) { transition-delay: 0.1s; }
+    .card:nth-child(3) { transition-delay: 0.2s; }
+    .card:nth-child(4) { transition-delay: 0.05s; }
+    .card:nth-child(5) { transition-delay: 0.15s; }
+    .card:nth-child(6) { transition-delay: 0.25s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .nav__links, .btn--nav { display: none; }
+      .nav__toggle { display: flex; }
+      .hero {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        min-height: auto;
+      }
+      .hero__left { padding: 120px 32px 48px; }
+      .hero__right {
+        display: flex;
+        padding: 0 32px 72px;
+        justify-content: center;
+      }
+      .hero__img-wrap img { max-width: 260px; }
+      .hero__img-glow { width: 320px; height: 320px; }
+      .hero__scroll { display: none; }
+      .stats-bar__inner { gap: 36px; flex-wrap: wrap; justify-content: center; }
+      .about-grid { grid-template-columns: 1fr; gap: 48px; }
+      .cards-grid { grid-template-columns: repeat(2,1fr); }
+      .pro-grid { grid-template-columns: 1fr; }
+      .pro-avatar { flex-direction: row; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .footer__info { text-align: left; }
+    }
+    @media (max-width: 600px) {
+      .section { padding: 72px 0; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .about-stats { grid-template-columns: 1fr 1fr; }
+      .hero__left { padding: 110px 24px 40px; }
+      .hero__right { padding: 0 24px 60px; }
+      .hero__img-wrap img { max-width: 200px; }
+      .hero__img-glow { width: 260px; height: 260px; }
+      .hero__actions { flex-direction: column; align-items: flex-start; }
+      .pro-avatar { flex-direction: column; }
+      .map-wrapper { height: 280px; }
+      .stats-bar__inner { gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="nav__inner">
+      <a href="#" class="nav__logo">
+        <img src="Logo.png" alt="Vitalis">
+        <span class="nav__logo-text">Quiropraxia Vitalis</span>
+      </a>
+      <ul class="nav__links">
+        <li><a href="#quiropráxia">¿Qué es?</a></li>
+        <li><a href="#beneficios">Beneficios</a></li>
+        <li><a href="#profesional">El Profesional</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+      <a href="https://wa.me/543400669101" target="_blank" class="btn btn--nav">Reservar turno</a>
+      <button class="nav__toggle" id="navToggle" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#quiropráxia" class="mobile-link">¿Qué es?</a></li>
+      <li><a href="#beneficios" class="mobile-link">Beneficios</a></li>
+      <li><a href="#profesional" class="mobile-link">El Profesional</a></li>
+      <li><a href="#contacto" class="mobile-link">Contacto</a></li>
+      <li><a href="https://wa.me/543400669101" target="_blank" class="btn btn--primary">Reservar turno</a></li>
+    </ul>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero__bg"></div>
+    <div class="hero__left">
+      <span class="hero__eyebrow">Quiropráxia en Rosario</span>
+      <h1 class="hero__title">
+        Tu columna<br>en <em>equilibrio.</em><br>Tu vida en<br><em>movimiento.</em>
+      </h1>
+      <p class="hero__subtitle">Recuperá tu bienestar de forma natural, sin medicamentos ni cirugías. Ajustes quiroprácticos personalizados para mejorar tu calidad de vida.</p>
+      <div class="hero__actions">
+        <a href="https://wa.me/543400669101" target="_blank" class="btn btn--primary">Reservar turno</a>
+        <a href="#quiropráxia" class="btn btn--ghost">Conocer más</a>
+      </div>
+      <div class="hero__scroll">
+        <div class="hero__scroll-line"></div>
+        Scroll
+      </div>
+    </div>
+    <div class="hero__right">
+      <div class="hero__img-wrap">
+        <div class="hero__img-glow"></div>
+        <img src="Full.png" alt="Quiropraxia Vitalis">
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stats-bar__inner">
+      <div class="stat-b"><strong>100%</strong><span>Natural</span></div>
+      <div class="stat-b"><strong>Sin</strong><span>Medicamentos</span></div>
+      <div class="stat-b"><strong>+</strong><span>Calidad de vida</span></div>
+      <div class="stat-b"><strong>∞</strong><span>Bienestar</span></div>
+    </div>
+  </div>
+
+  <!-- QUÉ ES QUIROPRÁXIA -->
+  <section class="section" id="quiropráxia">
+    <div class="container">
+      <div class="section__header">
+        <span class="section__tag">La disciplina</span>
+        <h2 class="section__title">¿Qué es la Quiropráxia?</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-text fade-in">
+          <p class="about-lead">La quiropráxia es una disciplina de la salud que se enfoca en el diagnóstico, tratamiento y prevención de los trastornos del sistema musculoesquelético, con especial atención a la columna vertebral y su relación con el sistema nervioso.</p>
+          <p>A través de ajustes manuales precisos, busca restaurar la alineación natural del cuerpo para que pueda autorregularse y sanar de forma natural, sin necesidad de medicamentos ni cirugías.</p>
+          <p>Un enfoque integral que combina ciencia, movimiento y bienestar para mejorar tu calidad de vida desde adentro hacia afuera.</p>
+        </div>
+        <div class="about-stats fade-in" style="transition-delay:0.15s">
+          <div class="stat"><span class="stat__number">100%</span><span class="stat__label">Natural</span></div>
+          <div class="stat"><span class="stat__number">Sin</span><span class="stat__label">Medicamentos</span></div>
+          <div class="stat"><span class="stat__number">+</span><span class="stat__label">Calidad de vida</span></div>
+          <div class="stat"><span class="stat__number">∞</span><span class="stat__label">Bienestar</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE BAND -->
+  <div class="quote-band">
+    <div class="container">
+      <blockquote>"El cuerpo humano tiene una capacidad innata de sanar. La quiropráxia simplemente abre el camino."</blockquote>
+      <cite>Lic. Martín Fama · Quiropráxia Vitalis</cite>
+    </div>
+  </div>
+
+  <!-- BENEFICIOS -->
+  <section class="section section--alt" id="beneficios">
+    <div class="container">
+      <div class="section__header">
+        <span class="section__tag">Lo que ofrecemos</span>
+        <h2 class="section__title">Beneficios del tratamiento</h2>
+        <p class="section__subtitle">Cada ajuste está orientado a restaurar el equilibrio de tu cuerpo y potenciar tu bienestar de forma duradera.</p>
+      </div>
+      <div class="cards-grid">
+        <div class="card fade-in">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          </div>
+          <h3 class="card__title">Alivio del dolor natural</h3>
+          <p class="card__text">Reducción del dolor de espalda, cuello, cabeza y articulaciones mediante ajustes precisos que liberan la presión sobre los nervios, sin recurrir a fármacos.</p>
+        </div>
+        <div class="card fade-in">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/></svg>
+          </div>
+          <h3 class="card__title">Corrección postural</h3>
+          <p class="card__text">Identificación y corrección de subluxaciones vertebrales causadas por malos hábitos posturales, sedentarismo o lesiones, restaurando la alineación de la columna.</p>
+        </div>
+        <div class="card fade-in">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M8 12c0-2.2 1.8-4 4-4s4 1.8 4 4-1.8 4-4 4"/><path d="M12 8v1M12 15v1"/></svg>
+          </div>
+          <h3 class="card__title">Movilidad y flexibilidad</h3>
+          <p class="card__text">Los ajustes quiroprácticos reducen contracturas, aumentan el rango de movimiento articular y optimizan el rendimiento físico, el equilibrio y la agilidad.</p>
+        </div>
+        <div class="card fade-in">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <h3 class="card__title">Equilibrio del sistema nervioso</h3>
+          <p class="card__text">Al liberar tensiones en la columna, se regula el sistema nervioso autónomo, favoreciendo el descanso, la recuperación y la reducción del estrés crónico.</p>
+        </div>
+        <div class="card fade-in">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <h3 class="card__title">Cefaleas y migrañas</h3>
+          <p class="card__text">La manipulación espinal alivia la tensión acumulada en cuello y base del cráneo, siendo una alternativa eficaz para el manejo de dolores de cabeza frecuentes.</p>
+        </div>
+        <div class="card fade-in">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 class="card__title">Cuidado preventivo</h3>
+          <p class="card__text">Un plan de cuidado regular ayuda a prevenir lesiones futuras, fortalecer el sistema inmunológico y mantener el cuerpo en su máximo potencial a largo plazo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROFESIONAL -->
+  <section class="section" id="profesional">
+    <div class="container">
+      <div class="section__header">
+        <span class="section__tag">El profesional</span>
+        <h2 class="section__title">Lic. Martín Fama</h2>
+      </div>
+      <div class="pro-grid fade-in">
+        <div class="pro-avatar">
+          <div class="pro-avatar__circle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="pro-badge">Lic. en Kinesiología</div>
+        </div>
+        <div class="pro-content">
+          <p class="pro-lead">Licenciado en Kinesiología y Fisiatría con especialización en quiropráxia, dedicado al cuidado integral de la salud musculoesquelética y el bienestar de sus pacientes.</p>
+          <p>Con una visión holística del cuerpo humano, combina técnicas de ajuste quiropráctico, terapia manual y educación postural para abordar la causa raíz del dolor y no solo sus síntomas.</p>
+          <p>Su compromiso es acompañar a cada paciente en el camino hacia una vida más activa, libre de dolor y en pleno equilibrio.</p>
+          <div class="pro-tags">
+            <span class="tag">Ajuste Quiropráctico</span>
+            <span class="tag">Terapia Manual</span>
+            <span class="tag">Educación Postural</span>
+            <span class="tag">Bienestar Integral</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="section section--alt" id="contacto">
+    <div class="container">
+      <div class="section__header">
+        <span class="section__tag">Encontranos</span>
+        <h2 class="section__title">Contacto y ubicación</h2>
+        <p class="section__subtitle">Estamos en Rosario, listos para atenderte.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info fade-in">
+          <div class="contact-item">
+            <div class="contact-item__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <p class="contact-item__label">Dirección</p>
+              <p class="contact-item__value">Zeballos 1281, Rosario</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.28h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.94a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.28 16.92z"/></svg>
+            </div>
+            <div>
+              <p class="contact-item__label">Teléfono / WhatsApp</p>
+              <a href="https://wa.me/543400669101" target="_blank" class="contact-item__value contact-item__value--link">340 066-9101</a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>
+              <p class="contact-item__label">Horarios</p>
+              <p class="contact-item__value">Lunes a Viernes</p>
+              <p class="contact-item__value">10:00 hs — 14:00 hs</p>
+            </div>
+          </div>
+          <a href="https://wa.me/543400669101" target="_blank" class="btn btn--primary btn--full">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.112 1.522 5.837L.057 23.882l6.2-1.626A11.934 11.934 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.007-1.373l-.36-.214-3.68.965.981-3.585-.234-.369A9.818 9.818 0 1 1 12 21.818z"/></svg>
+            Escribinos por WhatsApp
+          </a>
+        </div>
+        <div class="map-wrapper fade-in" style="transition-delay:0.15s">
+          <iframe
+            title="Ubicación Vitalis"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3348.1!2d-60.6505!3d-32.9468!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sZeballos+1281%2C+Rosario%2C+Santa+Fe!5e0!3m2!1ses!2sar!4v1"
+            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta">
+    <div class="container">
+      <h2 class="cta__title">Comenzá tu camino hacia el bienestar</h2>
+      <p class="cta__subtitle">Reservá tu turno hoy y descubrí cómo la quiropráxia puede transformar tu calidad de vida.</p>
+      <a href="https://wa.me/543400669101" target="_blank" class="btn btn--primary btn--lg">Reservar mi turno</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div>
+          <div class="footer__logo-wrap">
+            <img src="Logo.png" alt="Vitalis">
+            <p class="footer__logo">Quiropraxia Vitalis</p>
+          </div>
+          <p class="footer__tagline">Quiropráxia para una mejor calidad de vida.</p>
+        </div>
+        <div class="footer__info">
+          <p>Zeballos 1281, Rosario</p>
+          <p>Lunes a Viernes · 10:00 — 14:00 hs</p>
+          <p>Lic. Martín Fama</p>
+        </div>
+      </div>
+      <p class="footer__copy">© 2026 Vitalis. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- WHATSAPP FLOAT -->
+  <a href="https://wa.me/543400669101" target="_blank" class="whatsapp-float" aria-label="WhatsApp">
+    <span class="wa-tip">¡Escribinos!</span>
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.112 1.522 5.837L.057 23.882l6.2-1.626A11.934 11.934 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.007-1.373l-.36-.214-3.68.965.981-3.585-.234-.369A9.818 9.818 0 1 1 12 21.818z"/></svg>
+  </a>
+
+  <script>
+    // NAV scroll
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // Mobile menu
+    const navToggle = document.getElementById('navToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let menuOpen = false;
+    navToggle.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu.classList.toggle('open', menuOpen);
+      document.body.style.overflow = menuOpen ? 'hidden' : '';
+    });
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        menuOpen = false;
+        mobileMenu.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Fade in on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in, .card, .stat, .contact-item, .pro-grid').forEach(el => {
+      if (!el.classList.contains('fade-in')) el.classList.add('fade-in');
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
