@@ -308,11 +308,11 @@
     .pro-avatar { display: flex; flex-direction: column; align-items: center; gap: 16px; }
     .pro-avatar__circle {
       width: 220px; height: 220px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--sage-lt), #c8e6d4);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--green); border: 2px solid rgba(45,125,111,0.15);
+      overflow: hidden;
+      border: 3px solid rgba(45,125,111,0.2);
+      box-shadow: 0 8px 32px rgba(26,58,46,0.15);
     }
-    .pro-avatar__circle svg { width: 80px; height: 80px; }
+    .pro-avatar__circle img { width: 100%; height: 100%; object-fit: cover; }
     .pro-badge {
       background: var(--sage-lt); border: 1px solid rgba(45,125,111,0.2);
       color: var(--green); font-size: 0.78rem; font-weight: 500;
@@ -653,7 +653,7 @@
       <div class="pro-grid fade-in">
         <div class="pro-avatar">
           <div class="pro-avatar__circle">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <img src="Lic.png" alt="Lic. Martín Fama">
           </div>
           <div class="pro-badge">Lic. en Kinesiología</div>
         </div>
